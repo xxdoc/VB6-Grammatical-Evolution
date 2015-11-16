@@ -32,7 +32,7 @@ Public PopSize As Long
 
 
 
-Private Const Ninstr As Long = 9 + 6 + 2  'Set of instructions
+Private Const Ninstr As Long = 9 + 2   'Set of instructions
 
 Private Const InstrLEN As Long = 7
 
@@ -326,24 +326,24 @@ Public Sub RUNstep(wI As Long)
                 R = IIf(A < B, A, B)
             Case 9
                 R = A
-            Case 10
-                R = Cos(A)
-            Case 11
-                R = Sin(A)
-            Case 12
-                R = Tan(A)
-            Case 13
-                R = Log(Abs(A) + 0.00001)
-            Case 14
-                R = Exp(Clamp(A, -100, 100))
-            Case 15
-                R = Abs(A)
+'            Case 10
+'                R = Cos(A)
+'            Case 11
+'                R = Sin(A)
+'            Case 12
+'                R = Tan(A)
+'            Case 13
+'                R = Log(Abs(A) + 0.00001)
+'            Case 14
+'                R = Exp(Clamp(A, -100, 100))
+'            Case 15
+'                R = Abs(A)
                 '------
-            Case 16    '10
+            Case 10 '16    '10
                 'just JUMP
-            Case 17    '11    'JMPgreater
+            Case 11 '17    '11    'JMPgreater
                 R = CLng(A > B)
-            Case 18    '12   'JMPsmaller
+            Case 12 '18    '12   'JMPsmaller
                 R = CLng(A < B)
             End Select
 
@@ -352,7 +352,7 @@ Public Sub RUNstep(wI As Long)
             If R > MaxResult Then R = MaxResult
 
             '----------------------------------------------------------------------------------
-            If INSTRU < 16 Then '10
+            If INSTRU < 10 Then '10 '16
                 SaveTo = .PRG(iPTR + 5) Mod 2 + 1
                 Select Case SaveTo
                 Case 1    'Save to RAM
@@ -364,11 +364,11 @@ Public Sub RUNstep(wI As Long)
                 End Select
             Else
                 Select Case INSTRU
-                Case 16 '10    'jump
+                Case 10 '16 '10    'jump
                     JumpTO = .PRG(iPTR + 6) Mod LinesOfCode + 1
                     JumpTO = 1 + (JumpTO - 1) * InstrLEN - InstrLEN
                     .IP = JumpTO
-                Case 17, 18
+                Case 11, 12 '17, 18
                     If R Then    'JUMP IF > or <
                         JumpTO = .PRG(iPTR + 6) Mod LinesOfCode + 1
                         JumpTO = 1 + (JumpTO - 1) * InstrLEN - InstrLEN
@@ -475,25 +475,25 @@ Public Function GetBESTcode() As String
                 Case 9    'Assign
                     R = A
                     '---------
-                Case 10
-                    R = "Cos(" & A & ")"
-                Case 11
-                    R = "Sin(" & A & ")"
-                Case 12
-                    R = "Tan(" & A & ")"
-                Case 13
-                    R = "Log(Abs(" & A & "))"
-                Case 14
-                    R = "Exp(" & A & ")"
-                Case 15
-                    R = "Abs(" & A & ")"
+'                Case 10
+'                    R = "Cos(" & A & ")"
+'                Case 11
+'                    R = "Sin(" & A & ")"
+'                Case 12
+'                    R = "Tan(" & A & ")"
+'                Case 13
+'                    R = "Log(Abs(" & A & "))"
+'                Case 14
+'                    R = "Exp(" & A & ")"
+'                Case 15
+'                    R = "Abs(" & A & ")"
 
 
-                Case 16    ' 10
+                Case 10 '16    ' 10
                     R = "JUMP ->"
-                Case 17    ' 11
+                Case 11 '17    ' 11
                     R = "jmpIF (" & A & " > " & B & ") ->"
-                Case 18    ' 12
+                Case 12 '18    ' 12
                     R = "jmpIF (" & A & " < " & B & ") ->"
 
                 Case Else
@@ -516,15 +516,15 @@ Public Function GetBESTcode() As String
                     vO = "OUT(" & SaveAddr & ")"
                 End Select
 
-                If INSTRU < 16 Then    '10
+                If INSTRU < 10 Then    '10 '16
                     S = S & "[" & CStr(LN) & "] " & vO & " = " & R & vbCrLf
                 Else
 
                     Select Case INSTRU
-                    Case 16    '10
+                    Case 10 '16    '10
                         JumpTO = .PRG(iPTR + 6) Mod LinesOfCode + 1
                         S = S & "[" & CStr(LN) & "] " & R & " {" & JumpTO & "}" & vbCrLf
-                    Case 17, 18    '11,12
+                    Case 11, 12 '17, 18    '11,12
                         JumpTO = .PRG(iPTR + 6) Mod LinesOfCode + 1
                         S = S & "[" & CStr(LN) & "] " & R & " {" & JumpTO & "}" & vbCrLf
                     End Select
