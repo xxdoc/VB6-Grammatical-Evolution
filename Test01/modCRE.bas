@@ -1,3 +1,4 @@
+Attribute VB_Name = "modCRE"
 Option Explicit
 
 Public Type tCRE
