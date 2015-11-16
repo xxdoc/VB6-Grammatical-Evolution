@@ -1,3 +1,4 @@
+Attribute VB_Name = "modMAIN"
 Option Explicit
 
 Public GE      As clsGE
