@@ -1,3 +1,4 @@
+Attribute VB_Name = "modAPI"
 Option Explicit
 DefLng A-Z
 
